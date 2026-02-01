@@ -64,6 +64,16 @@
         }
 
         .logo svg {
+            max-height: 200px;
+        }
+
+        .logo img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .logo svg {
             width: 100%;
             height: auto;
         }
@@ -77,6 +87,7 @@
             overflow: hidden;
         }
 
+        /* 透過背景画像レイヤー - AIを活用している経営者たちの成長を想起させる画像 */
         .hero::before {
             content: '';
             position: absolute;
@@ -84,16 +95,48 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('hero-bg.jpg') center/cover;
-            opacity: 0.2;
+            background-image: url('hero-bg-transparent.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.5;
             z-index: 0;
+            /* どんな背景色にも馴染むようにミックスブレンドモードを設定 */
+            mix-blend-mode: screen;
+            /* 画像が読み込めない場合のフォールバック */
+            background-color: transparent;
+        }
+
+        /* オーバーレイ - テキストの可読性を確保しつつ、背景画像を活かす */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.5) 0%,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0.6) 100%
+            );
+            z-index: 1;
         }
 
         .hero-content {
             max-width: 900px;
             margin: 0 auto;
             position: relative;
-            z-index: 1;
+            z-index: 2;
+        }
+
+        /* 透過画像が読み込めない場合のフォールバック */
+        @supports not (mix-blend-mode: screen) {
+            .hero::before {
+                mix-blend-mode: normal;
+                opacity: 0.4;
+            }
         }
 
         .hero-image {
@@ -132,55 +175,88 @@
 
         .btn {
             display: inline-block;
-            padding: 16px 40px;
-            border-radius: 4px;
+            padding: 18px 40px;
+            border-radius: 8px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 16px;
-            transition: all 0.2s ease;
-            border: 1px solid #000;
+            transition: all 0.3s ease;
+            border: none;
             cursor: pointer;
             text-align: center;
-            background: #000;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             color: #fff;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                0 2px 4px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:hover {
-            background: #333;
-            transform: translateY(-1px);
+            background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.5),
+                0 4px 8px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
-        .btn-outline {
-            background: transparent;
-            color: #fff;
-            border: 1px solid #fff;
-        }
-
-        .btn-outline:hover {
-            background: #fff;
-            color: #fff;
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.4),
+                0 1px 2px rgba(0, 0, 0, 0.3),
+                inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .btn-accent {
-            background: #ffd700;
-            color: #fff;
-            border: 1px solid #ffd700;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #000;
+            border: none;
+            box-shadow: 
+                0 4px 12px rgba(255, 215, 0, 0.4),
+                0 2px 4px rgba(255, 215, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .btn-accent:hover {
-            background: #ffed4e;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(135deg, #ffed4e 0%, #fff176 100%);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(255, 215, 0, 0.5),
+                0 4px 8px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
 
-        .btn-secondary {
-            background: #333;
-            color: #fff;
-            border: 1px solid #555;
+        .btn-accent:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.4),
+                0 1px 2px rgba(255, 215, 0, 0.3),
+                inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-secondary:hover {
-            background: #555;
+        /* ボタン内の金額を黄色に統一 */
+        .btn small {
+            color: #ffd700 !important;
+            font-weight: 600;
         }
 
         /* セクション共通スタイル */
@@ -223,7 +299,45 @@
 
         /* 課題提起セクション */
         .pain-points {
-            background: #fafafa;
+            background: #0a0a0a;
+            position: relative;
+        }
+
+        .pain-points::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+            z-index: 0;
+        }
+
+        .pain-points > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .pain-points .section-title {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            color: #e0e0e0;
+            padding: 30px 40px;
+            border-radius: 12px;
+            display: inline-block;
+            margin: 0 auto 60px;
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.6),
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.5),
+                0 1px 2px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.02em;
+            font-size: clamp(24px, 3.5vw, 36px);
+            white-space: nowrap;
         }
 
         .pain-grid {
@@ -446,6 +560,27 @@
             border-bottom: none;
         }
 
+        /* Business Athlete AI Club列を黄色枠で囲む */
+        .comparison-table th:nth-child(4),
+        .comparison-table td:nth-child(4) {
+            border-left: 3px solid #ffd700;
+            border-right: 3px solid #ffd700;
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .comparison-table th:nth-child(4) {
+            border-top: 3px solid #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .comparison-table tr:first-child th:nth-child(4) {
+            border-top: 3px solid #ffd700;
+        }
+
+        .comparison-table tr:last-child td:nth-child(4) {
+            border-bottom: 3px solid #ffd700;
+        }
+
         .check {
             color: #fff;
             font-weight: 600;
@@ -455,14 +590,27 @@
             color: #999;
         }
 
+        .excellent {
+            color: #ffd700;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .good {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .triangle {
+            color: #ff9800;
+            font-weight: 600;
+        }
+
         .price-highlight {
-            background: #ffd700;
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 2px;
+            color: #ccc;
             font-weight: 600;
             display: inline-block;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .price-note {
@@ -473,16 +621,79 @@
             font-weight: 400;
         }
 
+        /* 比較表の一言補足 */
+        .comparison-notes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-notes {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-note-item {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: left;
+        }
+
+        .comparison-note-item h4 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .comparison-note-item p {
+            color: #ccc;
+            line-height: 1.8;
+            font-size: 15px;
+            margin: 0;
+        }
+
+        .comparison-note-item.highlight-note {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #ffd700;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+        }
+
+        .comparison-note-item.highlight-note h4 {
+            color: #ffd700;
+            border-bottom-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .comparison-note-item.highlight-note p {
+            color: #fff;
+        }
+
         /* 料金・ROIセクション */
         .pricing {
             background: #0a0a0a;
+        }
+
+        .pricing-content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            margin-top: 50px;
+            align-items: start;
         }
 
         .roi-section {
             background: #1a1a1a;
             border: 1px solid #333;
             padding: 50px 40px;
-            margin-bottom: 60px;
             text-align: left;
             position: relative;
             overflow: hidden;
@@ -536,7 +747,16 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
-            margin-top: 50px;
+        }
+
+        @media (max-width: 1024px) {
+            .pricing-content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .roi-section {
+                margin-bottom: 40px;
+            }
         }
 
         .pricing-card {
@@ -843,26 +1063,7 @@
             margin-top: 50px;
         }
 
-        .closing .btn {
-            background: #fff;
-            color: #fff;
-            border: 1px solid #fff;
-        }
-
-        .closing .btn:hover {
-            background: #f5f5f5;
-        }
-
-        .closing .btn-outline {
-            background: transparent;
-            color: #fff;
-            border: 1px solid #fff;
-        }
-
-        .closing .btn-outline:hover {
-            background: #fff;
-            color: #fff;
-        }
+        /* クロージングセクションのボタンも統一デザインを使用（.btnのスタイルを継承） */
 
         .closing-note {
             margin-top: 40px;
@@ -919,39 +1120,19 @@
     <!-- ヘッダー・ロゴ -->
     <header class="header">
         <div class="logo">
-            <svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <!-- ドレープした布のような質感のグラデーション -->
-                    <linearGradient id="fabricGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
-                        <stop offset="30%" style="stop-color:#0a0a0a;stop-opacity:1" />
-                        <stop offset="60%" style="stop-color:#000000;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#050505;stop-opacity:1" />
-                    </linearGradient>
-                    <!-- 布の光沢効果 -->
-                    <radialGradient id="fabricShine" cx="50%" cy="30%">
-                        <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.05" />
-                        <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
-                    </radialGradient>
-                </defs>
+            <img src="logo.svg" alt="Business Athlete AI Club" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                <!-- Background: 黒 -->
+                <rect width="400" height="200" fill="#000000"/>
                 
-                <!-- Background with fabric texture effect -->
-                <rect width="400" height="120" fill="url(#fabricGradient)"/>
-                <rect width="400" height="120" fill="url(#fabricShine)"/>
+                <!-- BAC Text: 大きな太字のサンセリフ、中央揃え -->
+                <text x="200" y="80" font-family="Arial, 'Helvetica Neue', sans-serif" font-size="64" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="4">BAC</text>
                 
-                <!-- BAC Text -->
-                <text x="30" y="65" font-family="Arial, 'Helvetica Neue', sans-serif" font-size="56" font-weight="700" fill="#ffffff" letter-spacing="3">BAC</text>
+                <!-- Horizontal Separator: 細い白い水平線 -->
+                <line x1="100" y1="110" x2="300" y2="110" stroke="#ffffff" stroke-width="1"/>
                 
-                <!-- Vertical Separator -->
-                <line x1="130" y1="25" x2="130" y2="75" stroke="#ffffff" stroke-width="1.5" opacity="0.9"/>
-                
-                <!-- Business Athlete Club Text -->
-                <text x="150" y="40" font-family="Arial, 'Helvetica Neue', sans-serif" font-size="15" font-weight="400" fill="#ffffff" letter-spacing="0.5">Business</text>
-                <text x="150" y="58" font-family="Arial, 'Helvetica Neue', sans-serif" font-size="15" font-weight="400" fill="#ffffff" letter-spacing="0.5">Athlete</text>
-                <text x="150" y="76" font-family="Arial, 'Helvetica Neue', sans-serif" font-size="15" font-weight="400" fill="#ffffff" letter-spacing="0.5">Club</text>
-                
-                <!-- Japanese Slogan -->
-                <text x="200" y="100" font-family="'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif" font-size="13" font-weight="400" fill="#ffffff" text-anchor="middle">本気だけが集まる場所。</text>
+                <!-- Business Athlete Club Text: 中央揃え、通常の太さ -->
+                <text x="200" y="150" font-family="Arial, 'Helvetica Neue', sans-serif" font-size="18" font-weight="400" fill="#ffffff" text-anchor="middle" letter-spacing="1">Business Athlete Club</text>
             </svg>
         </div>
     </header>
@@ -960,16 +1141,16 @@
     <section class="hero">
         <div class="hero-content">
             <img src="hero-main.jpg" alt="Business Athlete AI Club" class="hero-image" onerror="this.style.display='none'">
-            <h1>独学の挫折を、仲間との『熱狂』へ。<br>AIで自走する人材になる。</h1>
+            <h1>独学で終わらせない。<br>AIを成果が出る武器に。</h1>
             <p class="subtitle"><span class="highlight">月額5,500円</span>で始める、実践型AI活用コミュニティ<br>「Business Athlete AI Club」</p>
             <div class="cta-buttons">
-                <a href="https://buy.stripe.com/00w14neK5dLid7x3BP9AA01" class="btn" target="_blank">
+                <a href="terms.html?plan=owner" class="btn">
                     経営者・個人事業主向け入会<br><small style="font-size: 12px; opacity: 0.8;">（<span class="highlight">月額22,000円</span>）</small>
                 </a>
-                <a href="https://buy.stripe.com/bJe5kDatPcHe3wXa0d9AA00" class="btn btn-secondary" target="_blank">
+                <a href="terms.html?plan=employee" class="btn btn-secondary">
                     社員教育・組織導入<br><small style="font-size: 12px; opacity: 0.8;">（月5,500円〜）</small>
                 </a>
-                <a href="https://buy.stripe.com/bJe5kDatPcHe3wXa0d9AA00" class="btn btn-outline" target="_blank">
+                <a href="terms.html?plan=employee" class="btn btn-outline">
                     スキルアップしたい社会人向け<br><small style="font-size: 12px; opacity: 0.8;">（月5,500円）</small>
                 </a>
             </div>
@@ -1136,7 +1317,7 @@
 
     <!-- 比較・優位性 -->
     <section class="section comparison">
-        <h2 class="section-title">なぜAI Clubなのか？</h2>
+        <h2 class="section-title">なぜ、学びの選択肢は「AI Club」なのか？</h2>
         <img src="comparison-image.jpg" alt="比較" class="section-image" onerror="this.style.display='none'">
         <div class="comparison-table">
             <table>
@@ -1145,7 +1326,7 @@
                         <th>比較項目</th>
                         <th>YouTube独学</th>
                         <th>高額スクール</th>
-                        <th>AI Club</th>
+                        <th>Business Athlete AI Club</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1153,31 +1334,37 @@
                         <td><strong>価格</strong></td>
                         <td>無料</td>
                         <td>約80万円</td>
-                        <td><span class="price-highlight"><span class="highlight">月額5,500円</span>〜</span></td>
+                        <td><span class="price-highlight">月額5,500円〜22,000円</span></td>
                     </tr>
                     <tr>
-                        <td><strong>継続性</strong></td>
-                        <td class="cross">✗ <span class="highlight">挫折率90%</span></td>
-                        <td class="check">✓</td>
-                        <td class="check">✓ コミュニティで継続</td>
+                        <td><strong>学習の継続性</strong></td>
+                        <td class="cross">✕ ほぼ続かない<br><span style="font-size: 13px; color: #999;">（挫折率 約90%）</span></td>
+                        <td class="triangle">△ 期間限定</td>
+                        <td class="excellent">◎ コミュニティで継続</td>
                     </tr>
                     <tr>
                         <td><strong>体系性</strong></td>
-                        <td class="cross">✗ 断片的</td>
-                        <td class="check">✓</td>
-                        <td class="check">✓ スキルツリー完備</td>
+                        <td class="cross">✕ 断片的</td>
+                        <td class="good">◯ カリキュラム型</td>
+                        <td class="excellent">◎ スキルツリー完備</td>
                     </tr>
                     <tr>
-                        <td><strong>実践性</strong></td>
-                        <td class="cross">✗ 理論のみ</td>
-                        <td class="check">✓</td>
-                        <td class="check">✓ 実務直結</td>
+                        <td><strong>実践レベル</strong></td>
+                        <td class="cross">✕ 理論中心</td>
+                        <td class="good">◯ 課題あり</td>
+                        <td class="excellent">◎ 業務・事業に直結</td>
                     </tr>
                     <tr>
                         <td><strong>サポート</strong></td>
-                        <td class="cross">✗ なし</td>
-                        <td class="check">✓</td>
-                        <td class="check">✓ 過去アーカイブ（授業テキスト・動画）24時間視聴可能</td>
+                        <td class="cross">✕ なし</td>
+                        <td class="good">◯ 期間内のみ</td>
+                        <td class="excellent">◎ アーカイブ常時視聴＋質問OK</td>
+                    </tr>
+                    <tr>
+                        <td><strong>学びのゴール</strong></td>
+                        <td class="cross">不明確</td>
+                        <td>修了がゴール</td>
+                        <td class="excellent">成果がゴール</td>
                     </tr>
                 </tbody>
             </table>
@@ -1185,28 +1372,43 @@
         <p class="price-note">
             <span class="highlight">1日あたり約177円</span>。未来のキャリアを変える。
         </p>
+        <div class="comparison-notes">
+            <div class="comparison-note-item">
+                <h4>YouTube独学</h4>
+                <p>情報は無限。でも、何からやるか・続け方が分からない</p>
+            </div>
+            <div class="comparison-note-item">
+                <h4>高額スクール</h4>
+                <p>短期間で学べるが、終わった瞬間に実務に戻れない</p>
+            </div>
+            <div class="comparison-note-item highlight-note">
+                <h4>AI Club</h4>
+                <p>学び → 実装 → 改善 を<br>仕事の中で回し続ける場所</p>
+            </div>
+        </div>
     </section>
 
     <!-- 料金・ROI -->
     <section class="section pricing">
         <h2 class="section-title">料金・ROI（投資対効果）</h2>
         <img src="pricing-main.jpg" alt="料金・ROI" class="section-image" onerror="this.style.display='none'">
-        <div class="roi-section">
-            <h3>圧倒的な投資対効果</h3>
-            <div class="roi-grid">
-                <div class="roi-item">
-                    <h4>個人向けROI</h4>
-                    <p>時給2,000円換算で月10時間の時短ができれば、<br><strong>20,000円相当の価値</strong><br>
-                    5,500円の投資で<strong>4倍のリターン</strong></p>
-                </div>
-                <div class="roi-item">
-                    <h4>企業向けROI</h4>
-                    <p>時給3,000円の社員が1日5分効率化するだけで元が取れる<br>
-                    1日30分効率化なら<strong>ROI 600%</strong></p>
+        <div class="pricing-content-wrapper">
+            <div class="roi-section">
+                <h3>圧倒的な投資対効果</h3>
+                <div class="roi-grid">
+                    <div class="roi-item">
+                        <h4>個人向けROI</h4>
+                        <p>時給2,000円換算で月10時間の時短ができれば、<br><strong>20,000円相当の価値</strong><br>
+                        5,500円の投資で<strong>4倍のリターン</strong></p>
+                    </div>
+                    <div class="roi-item">
+                        <h4>企業向けROI</h4>
+                        <p>時給3,000円の社員が1日5分効率化するだけで元が取れる<br>
+                        1日30分効率化なら<strong>ROI 600%</strong></p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="pricing-grid">
+            <div class="pricing-grid">
             <div class="pricing-card">
                 <h3>個人プラン</h3>
                 <div class="price">22,000円<span>/月</span></div>
@@ -1217,7 +1419,7 @@
                     <li>授業テキスト・動画アーカイブ</li>
                     <li>スキルツリー完備</li>
                 </ul>
-                <a href="https://buy.stripe.com/00w14neK5dLid7x3BP9AA01" class="btn" target="_blank" style="margin-top: 30px; display: block; text-align: center;">
+                <a href="terms.html?plan=owner" class="btn" style="margin-top: 30px; display: block; text-align: center;">
                     今すぐ入会する
                 </a>
             </div>
@@ -1231,7 +1433,7 @@
                     <li>授業テキスト・動画アーカイブ</li>
                     <li>スキルツリー完備</li>
                 </ul>
-                <a href="https://buy.stripe.com/bJe5kDatPcHe3wXa0d9AA00" class="btn" target="_blank" style="margin-top: 30px; display: block; text-align: center;">
+                <a href="terms.html?plan=employee" class="btn" style="margin-top: 30px; display: block; text-align: center;">
                     今すぐ入会する
                 </a>
             </div>
@@ -1245,9 +1447,10 @@
                     <li>授業テキスト・動画アーカイブ</li>
                     <li>スキルツリー完備</li>
                 </ul>
-                <a href="https://buy.stripe.com/bJe5kDatPcHe3wXa0d9AA00" class="btn" target="_blank" style="margin-top: 30px; display: block; text-align: center;">
+                <a href="terms.html?plan=employee" class="btn" style="margin-top: 30px; display: block; text-align: center;">
                     今すぐ入会する
                 </a>
+            </div>
             </div>
         </div>
     </section>
@@ -1372,14 +1575,17 @@
         <h2 class="section-title">待てば待つほど、AI時代に取り残される。<br>今すぐスタートラインへ。</h2>
         <div class="line-button">
             <a href="https://line.me/R/ti/p/@your-line-id" class="btn btn-outline" target="_blank" style="font-size: 16px; padding: 16px 40px;">
-                📱 公式LINEに友だち追加
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px; display: inline-block;">
+                    <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.345 0 .627.285.627.63 0 .349-.282.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.018-.133.028-.199.028-.211 0-.391-.09-.51-.25l-2.443-3.317v2.936c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.02.136-.029.194-.029.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.628-.629.628M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.086.766.062 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" fill="#00C300"/>
+                </svg>
+                公式LINEに友だち追加
             </a>
         </div>
         <div class="cta-buttons">
-            <a href="https://buy.stripe.com/bJe5kDatPcHe3wXa0d9AA00" class="btn" target="_blank" style="font-size: 18px; padding: 20px 40px;">
+            <a href="terms.html?plan=employee" class="btn" style="font-size: 18px; padding: 20px 40px;">
                 今すぐ入会して学習を始める<br><small style="font-size: 13px; opacity: 0.8;">（社会人・社員育成：<span class="highlight">月額5,500円</span>）</small>
             </a>
-            <a href="https://buy.stripe.com/00w14neK5dLid7x3BP9AA01" class="btn btn-outline" target="_blank" style="font-size: 18px; padding: 20px 40px;">
+            <a href="terms.html?plan=owner" class="btn btn-outline" style="font-size: 18px; padding: 20px 40px;">
                 経営者・個人事業主向け入会<br><small style="font-size: 13px; opacity: 0.8;">（<span class="highlight">月額22,000円</span>）</small>
             </a>
         </div>
